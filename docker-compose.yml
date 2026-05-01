@@ -4,7 +4,7 @@ services:
       context: ./backend
     container_name: breaktime-backend
     ports:
-      - "8002:8001"
+      - "8002:10000"
 
   frontend:
     build:
