@@ -1,10 +1,6 @@
 import { useMemo, useState } from "react";
-import axios from "axios";
 
 const SAMPLE_INPUT = "";
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://punchpause-4.onrender.com/calculate";
-const API_URL = `${API_BASE_URL}/calculate-breaks`;
 
 function BreakCalculator() {
   const [input, setInput] = useState(SAMPLE_INPUT);
@@ -45,12 +41,27 @@ function BreakCalculator() {
     setError("");
 
     try {
-      const response = await axios.post(API_URL, { timestamps });
-      setResult(response.data);
+      const response = await fetch("https://punchpause-4.onrender.com/calculate-breaks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          timestamps,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.detail || "Request failed");
+      }
+
+      setResult(data);
     } catch (requestError) {
       setResult(null);
       setError(
-        requestError.response?.data?.detail ||
+        requestError.message ||
           "The calculation request failed. Check that the backend container or local server is running."
       );
     } finally {
