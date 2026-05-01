@@ -3,7 +3,7 @@ import axios from "axios";
 
 const SAMPLE_INPUT = "";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://punchpause-4.onrender.com";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://punchpause-4.onrender.com/calculate";
 const API_URL = `${API_BASE_URL}/calculate-breaks`;
 
 function BreakCalculator() {
