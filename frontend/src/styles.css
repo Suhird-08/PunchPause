@@ -239,6 +239,11 @@ textarea {
   color: #f8fbff;
 }
 
+.accent-card strong,
+.accent-card span {
+  color: inherit;
+}
+
 .break-list {
   margin-top: 20px;
   display: grid;
