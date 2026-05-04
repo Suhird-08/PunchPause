@@ -1,6 +1,10 @@
 import { memo, useDeferredValue, useMemo, useState, startTransition } from "react";
 
 const SAMPLE_INPUT = "";
+const API_BASE_URL = (
+  import.meta.env.VITE_API_URL?.trim() ||
+  (import.meta.env.DEV ? "/api" : "https://punchpause-4.onrender.com")
+).replace(/\/$/, "");
 
 function formatExactDuration(totalSeconds) {
   const safeSeconds = Math.max(0, Math.round(totalSeconds));
@@ -120,7 +124,7 @@ function BreakCalculator() {
     setError("");
 
     try {
-      const response = await fetch("https://punchpause-4.onrender.com/calculate-breaks", {
+      const response = await fetch(`${API_BASE_URL}/calculate-breaks`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -130,10 +134,10 @@ function BreakCalculator() {
         }),
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => null);
 
       if (!response.ok) {
-        throw new Error(data.detail || "Request failed");
+        throw new Error(data?.detail || `Request failed with status ${response.status}`);
       }
 
       startTransition(() => setResult(data));
@@ -141,7 +145,7 @@ function BreakCalculator() {
       startTransition(() => setResult(null));
       setError(
         requestError.message ||
-          "The calculation request failed. Check that the backend container or local server is running."
+          "The calculation request failed. Check that the backend server is running and the API URL is correct."
       );
     } finally {
       setIsLoading(false);
