@@ -177,7 +177,7 @@ function BreakCalculator() {
             {isLoading ? "Calculating..." : "Calculate Break"}
           </button>
           <button className="ghost-button" type="button" onClick={() => setInput(SAMPLE_INPUT)}>
-            Load Example
+            Reset
           </button>
         </div>
 
