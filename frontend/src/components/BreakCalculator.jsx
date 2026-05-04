@@ -1,19 +1,98 @@
-import { useMemo, useState } from "react";
+import { memo, useDeferredValue, useMemo, useState, startTransition } from "react";
 
 const SAMPLE_INPUT = "";
+
+function formatExactDuration(totalSeconds) {
+  const safeSeconds = Math.max(0, Math.round(totalSeconds));
+  const hours = Math.floor(safeSeconds / 3600);
+  const minutes = Math.floor((safeSeconds % 3600) / 60);
+  const seconds = safeSeconds % 60;
+
+  if (hours > 0) {
+    return `${hours}h ${minutes}m ${seconds}s`;
+  }
+
+  if (minutes > 0) {
+    return `${minutes}m ${seconds}s`;
+  }
+
+  return `${seconds}s`;
+}
+
+const ResultPanel = memo(function ResultPanel({ result, exceededMinutes, remainingMinutes }) {
+  return (
+    <article className="panel result-panel">
+      <div className="panel-heading">
+        <div>
+          <p className="section-label">Results</p>
+          <h2>Break summary</h2>
+        </div>
+      </div>
+
+      {result ? (
+        <>
+          <div className="summary-grid">
+            <div className="summary-card accent-card">
+              <span>Total Minutes</span>
+              <strong>{result.total_break_minutes}</strong>
+            </div>
+            {exceededMinutes !== null ? (
+              <div className="summary-card">
+                <span>Exceeded Time</span>
+                <strong>{exceededMinutes} mins</strong>
+              </div>
+            ) : (
+              <div className="summary-card">
+                <span>Time Left From 60</span>
+                <strong>{remainingMinutes} mins</strong>
+              </div>
+            )}
+          </div>
+
+          <div className="break-list">
+            {result.breaks.length ? (
+              result.breaks.map((item, index) => (
+                <div className="break-row" key={`${item.from}-${item.to}-${index}`}>
+                  <div>
+                    <p className="break-index">Break {index + 1}</p>
+                    <strong>
+                      {item.from} to {item.to}
+                    </strong>
+                  </div>
+                  <div className="duration-pill">{formatExactDuration(item.duration_seconds)}</div>
+                </div>
+              ))
+            ) : (
+              <p className="empty-state">
+                No valid break pairs were found in this list.
+              </p>
+            )}
+          </div>
+        </>
+      ) : (
+        <div className="empty-panel">
+          <p>Your break totals will appear here after you submit timestamps.</p>
+        </div>
+      )}
+    </article>
+  );
+});
 
 function BreakCalculator() {
   const [input, setInput] = useState(SAMPLE_INPUT);
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const deferredInput = useDeferredValue(input);
 
-  const timestampCount = useMemo(() => {
-    return input
+  const parsedTimestamps = useMemo(() => {
+    return deferredInput
       .split("\n")
       .map((line) => line.trim())
-      .filter(Boolean).length;
-  }, [input]);
+      .filter(Boolean);
+  }, [deferredInput]);
+
+  const timestampCount = parsedTimestamps.length;
 
   const totalMinutes = result ? Number(result.total_break_minutes) : null;
   const exceededMinutes =
@@ -33,7 +112,7 @@ function BreakCalculator() {
 
     if (timestamps.length < 2) {
       setError("Add at least two timestamps before calculating.");
-      setResult(null);
+      startTransition(() => setResult(null));
       return;
     }
 
@@ -57,9 +136,9 @@ function BreakCalculator() {
         throw new Error(data.detail || "Request failed");
       }
 
-      setResult(data);
+      startTransition(() => setResult(data));
     } catch (requestError) {
-      setResult(null);
+      startTransition(() => setResult(null));
       setError(
         requestError.message ||
           "The calculation request failed. Check that the backend container or local server is running."
@@ -105,62 +184,11 @@ function BreakCalculator() {
         {error ? <p className="error-banner">{error}</p> : null}
       </article>
 
-      <article className="panel result-panel">
-        <div className="panel-heading">
-          <div>
-            <p className="section-label">Results</p>
-            <h2>Break summary</h2>
-          </div>
-        </div>
-
-        {result ? (
-          <>
-            <div className="summary-grid">
-              <div className="summary-card accent-card">
-                <span>Total Minutes</span>
-                <strong>{result.total_break_minutes}</strong>
-              </div>
-              {exceededMinutes !== null ? (
-                <div className="summary-card">
-                  <span>Exceeded Time</span>
-                  <strong>{exceededMinutes} mins</strong>
-                </div>
-              ) : (
-                <div className="summary-card">
-                  <span>Time Left From 60</span>
-                  <strong>{remainingMinutes} mins</strong>
-                </div>
-              )}
-            </div>
-
-            <div className="break-list">
-              {result.breaks.length ? (
-                result.breaks.map((item, index) => (
-                  <div className="break-row" key={`${item.from}-${item.to}-${index}`}>
-                    <div>
-                      <p className="break-index">Break {index + 1}</p>
-                      <strong>
-                        {item.from} to {item.to}
-                      </strong>
-                    </div>
-                    <div className="duration-pill">
-                      {Math.round(item.duration_seconds / 60)} mins
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="empty-state">
-                  No valid break pairs were found in this list.
-                </p>
-              )}
-            </div>
-          </>
-        ) : (
-          <div className="empty-panel">
-            <p>Your break totals will appear here after you submit timestamps.</p>
-          </div>
-        )}
-      </article>
+      <ResultPanel
+        result={result}
+        exceededMinutes={exceededMinutes}
+        remainingMinutes={remainingMinutes}
+      />
     </section>
   );
 }
