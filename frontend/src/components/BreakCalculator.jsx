@@ -23,6 +23,14 @@ function formatExactDuration(totalSeconds) {
   return `${seconds}s`;
 }
 
+function formatMinutesAsDuration(totalMinutes) {
+  if (totalMinutes === null || Number.isNaN(totalMinutes)) {
+    return "";
+  }
+
+  return formatExactDuration(totalMinutes * 60);
+}
+
 const ResultPanel = memo(function ResultPanel({ result, exceededMinutes, remainingMinutes }) {
   return (
     <article className="panel result-panel">
@@ -37,18 +45,18 @@ const ResultPanel = memo(function ResultPanel({ result, exceededMinutes, remaini
         <>
           <div className="summary-grid">
             <div className="summary-card accent-card">
-              <span>Total Minutes</span>
-              <strong>{result.total_break_minutes}</strong>
+              <span>Total Break Time</span>
+              <strong>{formatMinutesAsDuration(Number(result.total_break_minutes))}</strong>
             </div>
             {exceededMinutes !== null ? (
               <div className="summary-card">
                 <span>Exceeded Time</span>
-                <strong>{exceededMinutes} mins</strong>
+                <strong>{formatMinutesAsDuration(exceededMinutes)}</strong>
               </div>
             ) : (
               <div className="summary-card">
                 <span>Time Left From 60</span>
-                <strong>{remainingMinutes} mins</strong>
+                <strong>{formatMinutesAsDuration(remainingMinutes)}</strong>
               </div>
             )}
           </div>
