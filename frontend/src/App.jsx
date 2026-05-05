@@ -8,11 +8,11 @@ function App() {
       <section className="hero-card">
         <div className="hero-copy">
           <p className="eyebrow">PunchPause Dashboard</p>
-          <h1>Calculate break durations from your punch log in seconds.</h1>
+          <h1>See every break in seconds with a faster, cleaner punch log view.</h1>
           <p className="hero-text">
-            Paste timestamps line by line, keep missing values as
+            Drop in your timestamps, leave
             <span> MISSING </span>
-            when needed, and let the app total the gaps for you.
+            where needed, and let PunchPause instantly total break time, flag long pauses, and organize the full day for you.
           </p>
         </div>
         <div className="hero-brand">
