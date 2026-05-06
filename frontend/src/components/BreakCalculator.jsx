@@ -58,7 +58,7 @@ const ResultPanel = memo(function ResultPanel({ result, exceededMinutes, remaini
               result.breaks.map((item, index) => (
                 <div className="break-row" key={`${item.from}-${item.to}-${index}`}>
                   <div>
-                    <p className="break-index">Break {index + 1}</p>
+                    <p className="break-index">{item.label || `Break ${index + 1}`}</p>
                     <strong>
                       {item.from} to {item.to}
                     </strong>
