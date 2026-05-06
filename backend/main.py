@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
@@ -28,6 +28,11 @@ class TimeRequest(BaseModel):
 @app.get("/")
 def read_root():
     return {"message": "BreakTime backend is running"}
+
+
+@app.head("/")
+def read_root_head():
+    return Response(status_code=200)
 
 @app.post("/calculate-breaks")
 def get_break_time(data: TimeRequest):
