@@ -53,7 +53,42 @@ textarea {
 .app-shell {
   width: min(1200px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 36px 0 56px;
+  padding: 36px 0 96px;
+}
+
+.corner-credit {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  margin: 0;
+  display: grid;
+  gap: 2px;
+  padding: 12px 16px;
+  border-radius: 18px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(241, 247, 252, 0.82)),
+    linear-gradient(135deg, rgba(18, 57, 95, 0.08), rgba(239, 142, 47, 0.12));
+  border: 1px solid rgba(18, 57, 95, 0.1);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+  box-shadow: 0 18px 34px rgba(27, 54, 88, 0.14);
+  backdrop-filter: blur(18px);
+  z-index: 20;
+}
+
+.corner-credit span {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #6f8299;
+  font-size: 0.68rem;
+}
+
+.corner-credit strong {
+  color: var(--brand-navy);
+  font-size: 0.88rem;
+  font-weight: 700;
 }
 
 .hero-card,
@@ -626,7 +661,7 @@ textarea {
   .app-shell {
     width: min(100% - 20px, 1200px);
     padding-top: 20px;
-    padding-bottom: 28px;
+    padding-bottom: 88px;
   }
 
   .hero-card,
@@ -668,5 +703,13 @@ textarea {
   .hero-metric-ring {
     width: 112px;
     height: 112px;
+  }
+
+  .corner-credit {
+    right: 12px;
+    bottom: 12px;
+    max-width: calc(100vw - 24px);
+    text-align: center;
+    justify-items: center;
   }
 }

@@ -6,6 +6,23 @@ def parse_time(t):
 def calculate_breaks(timestamps):
     breaks = []
     total_seconds = 0
+    shift_start = parse_time("11:00:00 AM")
+
+    if timestamps:
+        first_login = timestamps[0]
+
+        if first_login != "MISSING":
+            first_login_dt = parse_time(first_login)
+
+            if first_login_dt > shift_start:
+                late_seconds = (first_login_dt - shift_start).total_seconds()
+                breaks.append({
+                    "from": "11:00:00 AM",
+                    "to": first_login,
+                    "duration_seconds": late_seconds,
+                    "label": "Late login",
+                })
+                total_seconds += late_seconds
 
     for i in range(1, len(timestamps) - 1, 2):
         out_time = timestamps[i]
@@ -16,11 +33,14 @@ def calculate_breaks(timestamps):
 
         out_dt = parse_time(out_time)
         in_dt = parse_time(in_time)
+        counted_start = max(out_dt, shift_start)
+        diff = (in_dt - counted_start).total_seconds()
 
-        diff = (in_dt - out_dt).total_seconds()
+        if diff <= 0:
+            continue
 
         breaks.append({
-            "from": out_time,
+            "from": counted_start.strftime("%I:%M:%S %p"),
             "to": in_time,
             "duration_seconds": diff
         })
