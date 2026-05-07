@@ -187,10 +187,6 @@ const ResultPanel = memo(function ResultPanel({
         </div>
       )}
 
-      <p className="corner-credit result-credit">
-        <span>Concept By Nikita</span>
-        <strong>Created By Suhird</strong>
-      </p>
     </article>
   );
 });

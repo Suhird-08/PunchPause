@@ -56,46 +56,9 @@ textarea {
   padding: 36px 0 56px;
 }
 
-.corner-credit {
-  margin: 0;
-  display: grid;
-  gap: 2px;
-  padding: 12px 16px;
-  border-radius: 18px;
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(241, 247, 252, 0.82)),
-    linear-gradient(135deg, rgba(18, 57, 95, 0.08), rgba(239, 142, 47, 0.12));
-  border: 1px solid rgba(18, 57, 95, 0.1);
-  color: var(--text-muted);
-  font-size: 0.8rem;
-  line-height: 1.25;
-  letter-spacing: 0.02em;
-  box-shadow: 0 18px 34px rgba(27, 54, 88, 0.14);
-  backdrop-filter: blur(18px);
-}
-
 .result-panel {
   display: grid;
   gap: 18px;
-}
-
-.result-credit {
-  justify-self: end;
-  max-width: min(100%, 320px);
-  text-align: right;
-}
-
-.corner-credit span {
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: #6f8299;
-  font-size: 0.68rem;
-}
-
-.corner-credit strong {
-  color: var(--brand-navy);
-  font-size: 0.88rem;
-  font-weight: 700;
 }
 
 .hero-card,
@@ -712,13 +675,4 @@ textarea {
     height: 112px;
   }
 
-  .corner-credit {
-    max-width: 100%;
-  }
-
-  .result-credit {
-    justify-self: stretch;
-    text-align: center;
-    justify-items: center;
-  }
 }
