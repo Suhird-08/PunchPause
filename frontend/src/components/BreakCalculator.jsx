@@ -186,6 +186,11 @@ const ResultPanel = memo(function ResultPanel({
           <p>Paste timestamps to calculate breaks.</p>
         </div>
       )}
+
+      <p className="corner-credit result-credit">
+        <span>Concept By Nikita</span>
+        <strong>Created By Suhird</strong>
+      </p>
     </article>
   );
 });
